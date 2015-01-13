@@ -98,7 +98,7 @@ setActNames <- function(df){
   df;
 }
 readFile <-function(folder,filename){
-  file_path <- file.path("./data","UCI HAR Dataset")
+  file_path <- file.path("./","UCI HAR Dataset")
   fileData <- read.table(file.path(file_path,folder,filename))
   fileData
 }
