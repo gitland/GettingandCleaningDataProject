@@ -1,5 +1,34 @@
 run_analysis <- function(){
   
+  ## 1 Merges the training and the test sets to create one data set.
+ 
+  Data <- loadPrepareMergeData()
+  
+  ## 2 Extracts only the measurements on the mean and standard deviation for each measurement. 
+  
+  Data <- extractMeanSTDEachMeasurement(Data)
+  
+  ## 3 Uses descriptive activity names to name the activities in the data set
+  
+  Data <- setActNames(Data)
+  
+  ## 4 Appropriately labels the data set with descriptive variable names. 
+  Data <- setProperNames(Data)
+  
+  
+  ## 5 From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+  generateTidyDataset(Data)
+   
+}
+extractMeanSTDEachMeasurement <- function(Data){
+  
+  dataFeaturesVariableNames <- readFile("","features.txt")
+  meanstdFeaturesNames <- dataFeaturesVariableNames$V2[grep("mean\\(\\)|std\\(\\)",dataFeaturesVariableNames$V2)]
+  selectedNamesOnly <- c(as.character(meanstdFeaturesNames),"subject","activity")
+  Data <- subset(Data,select=selectedNamesOnly)
+  Data
+}
+loadPrepareMergeData <- function(){
   ## reading activity y test file
   activityTest <- readFile("test","Y_test.txt")
   ## reading activity y train file
@@ -28,33 +57,9 @@ run_analysis <- function(){
   dataFeaturesVariableNames <- readFile("","features.txt")
   names(dataFeatures) <- dataFeaturesVariableNames$V2
   
-  ## 1 Merges the training and the test sets to create one data set.
- 
   combine <- cbind(dataSubject,dataActivity)
   Data <- cbind(dataFeatures,combine)
-  
-  ## 2 Extracts only the measurements on the mean and standard deviation for each measurement. 
-  
-  meanstdFeaturesNames <- dataFeaturesVariableNames$V2[grep("mean\\(\\)|std\\(\\)",dataFeaturesVariableNames$V2)]
-  selectedNamesOnly <- c(as.character(meanstdFeaturesNames),"subject","activity")
-  Data <- subset(Data,select=selectedNamesOnly)
-  
-  ## 3 Uses descriptive activity names to name the activities in the data set
-  
-  Data <- setActNames(Data)
-  
-  ## 4 Appropriately labels the data set with descriptive variable names. 
-  Data <- setProperNames(Data)
-  
-  
-  ## 5 From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
-  generateTidyDataset(Data)
-  
-  ##for codebook
-  librayr(knitr)
-  
-  
-  
+  Data
 }
 generateTidyDataset <- function(Data)
 {
