@@ -2,22 +2,22 @@ run_analysis <- function(){
   
   ## 1 Merges the training and the test sets to create one data set.
  
-  Data <- loadPrepareMergeData()
+  mergedData <- loadPrepareMergeData()
   
   ## 2 Extracts only the measurements on the mean and standard deviation for each measurement. 
   
-  Data <- extractMeanSTDEachMeasurement(Data)
+  selectedData <- extractMeanSTDEachMeasurement(mergedData)
   
   ## 3 Uses descriptive activity names to name the activities in the data set
   
-  Data <- setActNames(Data)
+  actNamesData <- setActNames(selectedData)
   
   ## 4 Appropriately labels the data set with descriptive variable names. 
-  Data <- setProperNames(Data)
+  properNamesData <- setProperNames(actNamesData)
   
   
   ## 5 From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
-  generateTidyDataset(Data)
+  generateTidyDataset(properNamesData)
    
 }
 extractMeanSTDEachMeasurement <- function(Data){
@@ -65,8 +65,9 @@ generateTidyDataset <- function(Data)
 {
   library(plyr)
   Data2 <- aggregate(.~subject+activity,Data,mean)
-  Data2 <-Data2[order(Data2$subject,Data2$activity),]
-  write.table(Data2,file="tidydata.txt",row.name=FALSE)
+  tidyData <-Data2[order(Data2$subject,Data2$activity),]
+  write.table(tidyData,file="tidydata.txt",row.name=FALSE)
+  print("file created")
 }
 setProperNames<-function(df){
   ##t will be replace by time everywhere in the data
